@@ -13,7 +13,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var grabaciones:[Grabacion] = []
     var reproducirAudio:AVAudioPlayer?
-
+    var durationAudio:String?
+    
     @IBOutlet weak var tablaGrabaciones: UITableView!
     
     override func viewDidLoad() {
@@ -35,9 +36,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let grabacion = grabaciones[indexPath.row]
+        do {
+            reproducirAudio = try AVAudioPlayer(data: grabacion.audio! as Data)
+        } catch {}
         cell.textLabel?.text = grabacion.nombre
+        cell.detailTextLabel?.text = "Duracion \(String(round(reproducirAudio!.duration*10)/10))"
         return cell
     }
     
